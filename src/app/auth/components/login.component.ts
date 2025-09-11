@@ -51,65 +51,49 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         if (this.authService.isLoggedIn()) {
-            this.router.navigate(["/home"]);
+            this.router.navigate(["/tasks"]);
         }
     }
 
     onSubmit() {
-        if (this.loginForm.invalid) return;
+        if (this.loginForm.invalid) {
+            return;
+        }
 
         this.loading = true;
         const { email } = this.loginForm.value;
 
         this.authService.login({ email } as any).subscribe({
-            next: (res: any) => {
+            next: (loginResponse: any) => {
                 this.loading = false;
-                if (res.done) {
-                    console.log("token", res.token);
-                    this.authService.setToken(res.token);
-                    this.router.navigate(["/list-form"]);
-                } else {
-                    const dialogRef = this.dialog.open(ConfirmCreateUserComponent, {
-                        data: { email }
-                    });
 
+                if (loginResponse.done) {
+                    this.authService.setToken(loginResponse.token);
+                    this.router.navigate(["/tasks"]);
+                } else {
+                    const dialogRef = this.dialog.open(ConfirmCreateUserComponent, { data: { email } });
                     dialogRef.afterClosed().subscribe((create: any) => {
                         if (create) {
-                            this.authService.createUser({ email } as any).subscribe({
-                                next: () => {
-                                    this.snackBar.open("Usuario creado exitosamente", "Cerrar", { duration: 3000 });
+                            this.authService.createAccount({ email } as any).subscribe({
+                                next: (accountResponse: any) => {
+                                    if (!accountResponse.done) {
+                                        this.snackBar.open(accountResponse.message, "Cerrar", { duration: 3000 });
+                                    }
+
+                                    this.authService.setToken(accountResponse.token);
+                                    this.router.navigate(["/tasks"]);
                                 },
                                 error: () => {
-                                    this.snackBar.open("Error al crear el usuario", "Cerrar", { duration: 3000 });
+                                    this.snackBar.open("Error al crear la cuenta", "Cerrar", { duration: 3000 });
                                 }
                             });
                         }
                     });
                 }
             },
-            error: (err: any) => {
+            error: (error: any) => {
                 this.loading = false;
-
-                if (err?.status === 404 || err?.status === 0 || err?.error?.message === "USER_NOT_FOUND") {
-                    const dialogRef = this.dialog.open(ConfirmCreateUserComponent, {
-                        data: { email }
-                    });
-
-                    dialogRef.afterClosed().subscribe((create: any) => {
-                        if (create) {
-                            this.authService.createUser({ email } as any).subscribe({
-                                next: () => {
-                                    this.snackBar.open("Usuario creado exitosamente", "Cerrar", { duration: 3000 });
-                                },
-                                error: () => {
-                                    this.snackBar.open("Error al crear el usuario", "Cerrar", { duration: 3000 });
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    this.snackBar.open(err?.error?.message || "Error al iniciar sesión", "Cerrar", { duration: 3000 });
-                }
+                this.snackBar.open(error?.error?.message || "Error al iniciar sesión", "Cerrar", { duration: 3000 });
             }
         });
     }
