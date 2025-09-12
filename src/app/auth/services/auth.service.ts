@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
 import { globalConst } from "../../global";
@@ -10,7 +11,7 @@ export class AuthService {
     private tokenKey = globalConst.tokenKey;
     private tokenExpiryKey = globalConst.tokenExpiryKey;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private router: Router) { }
 
     login(credentials: UserCredentials): Observable<UserResponse> {
         return this.http.post<UserResponse>(`${globalConst.userApiUrl}/login`, credentials);
@@ -39,6 +40,8 @@ export class AuthService {
     logout() {
         localStorage.removeItem(this.tokenKey);
         localStorage.removeItem(this.tokenExpiryKey);
+
+        this.router.navigate(["/login"]);
     }
 
     getToken(): string | null {

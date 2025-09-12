@@ -1,21 +1,52 @@
-header {
-  background-color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 3rem;
+.toolbar {
+    display: flex;
+    align-items: center;
+
+    .logo {
+        height: 40px;
+    }
+
+    .flex-spacer {
+        flex: 1 1 auto;
+    }
 }
 
-.welcome-container {
-  text-align: justify;
-  padding: 1.5rem 3rem;
+.container {
+    padding: 1rem;
+    max-width: 100% !important;
 
-  .welcome-txt {
-    text-align: center;
-  }
+    .filters {
+        margin-bottom: 1rem;
 
-  .good-luck-txt {
-    color: #ff6600;
-    font-weight: bold;
-  }
+        .form-label {
+            font-weight: 500;
+        }
+
+        .btn {
+            width: 120px;
+            height: 38px;
+        }
+    }
+
+    .full-width {
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+/* Responsive ajustes */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th,
+    td {
+        padding: 0.5rem;
+    }
 }
