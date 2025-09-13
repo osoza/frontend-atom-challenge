@@ -14,8 +14,13 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbDropdownModule } from "@ng-bootstrap/ng-bootstrap";
+import {
+    catchError, map, Observable, of
+} from "rxjs";
 
 import { AuthService } from "../../auth/services/auth.service";
+import { ConfirmDialogComponent } from "../../shared/components/confirm-dialog/confirm-dialog.component";
+import { DialogResponse } from "../../shared/components/confirm-dialog/models/confirm-dialog.model";
 import { AddTaskDialogComponent } from "./components/add-task-dialog/add-task-dialog.component";
 import { Task, TasksFilters, TasksListResponse } from "./models/task-list.model";
 import { TasksService } from "./services/task-list.service";
@@ -103,9 +108,37 @@ export class TaskListPageComponent implements OnInit {
         // this.tasks.update((arr) => arr.map((t) => (t.id === task.id ? { ...t, completed: !t.completed } : t)));
     }
 
-    deleteTask(task: Task): void {
-        this.tasksService.updateTask(task);
-        // this.tasks.update((arr) => arr.filter((t) => t.id !== task.id));
+    deleteTask(task: Task): Observable<DialogResponse> {
+        return this.tasksService.deleteTask(task.id).pipe(
+            map((deleted: boolean) => ({
+                done: deleted,
+                message: deleted
+                    ? "✅ Operación realizada con éxito"
+                    : "❌ Hubo un error al procesar"
+            })),
+            catchError((error) => of({
+                done: false,
+                message: error || "❌ Hubo un error al procesar"
+            }))
+        );
+    }
+
+    openDeleteDialog(task: Task): void {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            disableClose: true,
+            data: {
+                title: "Está a punto de eliminar una tarea",
+                positive: "Eliminar",
+                callback: (): Observable<DialogResponse> => this.deleteTask(task)
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if (result) {
+                this.snackBar.open("✅ Operación realizada con éxito", "Cerrar", { duration: 3000 });
+                this.getTasks(this.getFilters());
+            }
+        });
     }
 
     openAddDialog(): void {

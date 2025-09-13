@@ -30,6 +30,10 @@ export class TasksService {
         return this.http.post<TaskResponse>(`${globalConst.taskApiUrl}/`, credentials);
     }
 
+    deleteTask(id: string): Observable<boolean> {
+        return this.http.delete<boolean>(`${globalConst.taskApiUrl}/${id}`);
+    }
+
     updateTask(filters?: { title?: string; description?: string; completed?: boolean }): Observable<TaskResponse> {
         let params = new HttpParams();
         if (filters) {
