@@ -1,0 +1,14 @@
+<div class="modal-card">
+   <header class="modal-header">
+      <img alt="Logo de ATOM Chat" ngSrc="assets/images/logo-atom-chat.png" width="120" height="35" priority />
+      <h2>Cuenta no encontrada</h2>
+   </header>
+   <div class="modal-body">
+      <p>No existe una cuenta con el email <strong>{{ data.email }}</strong>.</p>
+      <p>¿Desea crear una nueva cuenta?</p>
+   </div>
+   <footer class="modal-actions">
+      <button mat-button class="cancel-btn" (click)="cancel()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="confirm()">Crear cuenta</button>
+   </footer>
+</div>

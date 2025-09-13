@@ -1,0 +1,19 @@
+.container {
+   max-width: 100%;
+}
+
+h4 {
+   font-weight: 600;
+}
+
+button {
+   min-width: 100px;
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+}
+
+textarea {
+   resize: none;
+}

@@ -1,0 +1,34 @@
+<header class="mat-elevation-z1">
+  <img alt="Logo de ATOM Chat" ngSrc="assets/images/logo-atom-chat.png" width="192.5" height="55" priority />
+  <h1 class="welcome-txt">Reto Técnico</h1>
+</header>
+
+<div class="login-wrapper">
+  <mat-card class="login-card">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <h2 class="login-title">Iniciar Sesión</h2>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          El email es obligatorio
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Email no válido
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loginForm.invalid || loading"
+        class="login-button"
+      >
+        <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="20"></mat-progress-spinner>
+        <span *ngIf="!loading">Ingresar</span>
+      </button>
+    </form>
+  </mat-card>
+</div>
