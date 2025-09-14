@@ -1,4 +1,4 @@
 export interface DialogResponse {
-    done: boolean;
-    message: string;
+   done: boolean;
+   message: string;
 }

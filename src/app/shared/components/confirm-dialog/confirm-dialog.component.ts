@@ -9,49 +9,54 @@ import { Observable } from "rxjs";
 import { DialogResponse } from "./models/confirm-dialog.model";
 
 @Component({
-    selector: "app-confirm-dialog",
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatProgressSpinnerModule
-    ],
-    templateUrl: "./confirm-dialog.component.html",
-    styleUrls: ["./confirm-dialog.component.scss"]
+   selector: "app-confirm-dialog",
+   standalone: true,
+   imports: [
+      CommonModule,
+      MatDialogModule,
+      MatButtonModule,
+      MatProgressSpinnerModule
+   ],
+   templateUrl: "./confirm-dialog.component.html",
+   styleUrls: ["./confirm-dialog.component.scss"]
 })
 export class ConfirmDialogComponent {
-    loading: boolean = false;
+   loading: boolean = false;
 
-    constructor(
-        public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-        private snackBar: MatSnackBar,
-        @Inject(MAT_DIALOG_DATA) public data: {
-            title?: string,
-            positive?: string,
-            callback: () => DialogResponse
-        }
-    ) { }
+   constructor(
+      public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+      private snackBar: MatSnackBar,
+      @Inject(MAT_DIALOG_DATA) public data: {
+         title?: string,
+         positive?: string,
+         showLoading?: boolean,
+         callback: () => DialogResponse
+      }
+   ) { }
 
-    onCancel(): void {
-        this.dialogRef.close(false);
-    }
+   onCancel(): void {
+      this.dialogRef.close(false);
+   }
 
-    onAccept(): void {
-        this.loading = true;
-        if (this.data?.callback) {
+   onAccept(): void {
+      if (this.data.showLoading) {
+         this.loading = true;
+         if (this.data?.callback) {
             const result$ = this.data.callback() as unknown as Observable<DialogResponse>;
             result$.subscribe((response: DialogResponse) => {
-                if (response.done) {
-                    this.dialogRef.close(true);
-                }
+               if (response.done) {
+                  this.dialogRef.close(true);
+               }
 
-                if (!response.done) {
-                    this.snackBar
-                        .open(response.message || "No se pudo eliminar la tarea", "Cerrar", { duration: 3000 });
-                    this.loading = false;
-                }
+               if (!response.done) {
+                  this.snackBar
+                     .open(response.message || "No se pudo eliminar la tarea", "Cerrar", { duration: 3000 });
+                  this.loading = false;
+               }
             });
-        }
-    }
+         }
+      } else {
+         this.dialogRef.close(true);
+      }
+   }
 }

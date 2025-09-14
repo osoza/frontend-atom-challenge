@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, Inject, inject } from "@angular/core";
 import {
    FormBuilder,
    FormGroup,
@@ -7,18 +7,18 @@ import {
    ReactiveFormsModule,
    Validators
 } from "@angular/forms";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { Observable, of } from "rxjs";
 
 import { ConfirmDialogComponent } from "../../../../shared/components/confirm-dialog/confirm-dialog.component";
 import { DialogResponse } from "../../../../shared/components/confirm-dialog/models/confirm-dialog.model";
-import { AddTask, Errors, TaskResponse } from "../../models/task-list.model";
+import { Errors, Task, TaskResponse } from "../../models/task-list.model";
 import { TasksService } from "../../services/task-list.service";
 
 @Component({
-   selector: "app-add-task-dialog",
+   selector: "app-edit-task-dialog",
    standalone: true,
    imports: [
       CommonModule,
@@ -27,26 +27,28 @@ import { TasksService } from "../../services/task-list.service";
       MatSnackBarModule,
       MatProgressSpinnerModule
    ],
-   templateUrl: "./add-task-dialog.component.html",
-   styleUrls: ["./add-task-dialog.component.scss"],
+   templateUrl: "./edit-task-dialog.component.html",
+   styleUrls: ["./edit-task-dialog.component.scss"],
 })
-export class AddTaskDialogComponent {
+export class EditTaskDialogComponent {
    private dialog = inject(MatDialog);
    taskForm!: FormGroup;
    loading: boolean = false;
    errors: Errors = { title: false, description: false };
 
    constructor(
-      public dialogRef: MatDialogRef<AddTaskDialogComponent>,
+      public dialogRef: MatDialogRef<EditTaskDialogComponent>,
       private formBuilder: FormBuilder,
       private tasksService: TasksService,
-      private snackBar: MatSnackBar
+      private snackBar: MatSnackBar,
+      @Inject(MAT_DIALOG_DATA) public data: { task: Task }
    ) {
       this.taskForm = this.formBuilder.group({
-         title: [null, [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s.,;:áéíóúÁÉÍÓÚñÑ!?()-]*$/)]],
-         description: [null, [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s.,;:áéíóúÁÉÍÓÚñÑ!?()-]*$/)]],
-         createdAt: [new Date()],
-         completed: [false]
+         title: [data.task.title, [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s.,;:áéíóúÁÉÍÓÚñÑ!?()-]*$/)]],
+         description: [data.task.description, [
+            Validators.required,
+            Validators.pattern(/^[a-zA-Z0-9\s.,;:áéíóúÁÉÍÓÚñÑ!?()-]*$/)]
+         ]
       });
    }
 
@@ -93,7 +95,7 @@ export class AddTaskDialogComponent {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
          disableClose: true,
          data: {
-            title: "Está a punto de crear una tarea",
+            title: "Está a punto de editar la tarea",
             positive: "Aceptar",
             callback: (): Observable<DialogResponse> => of({ done: true, message: "" })
          }
@@ -103,10 +105,10 @@ export class AddTaskDialogComponent {
          if (result) {
             this.loading = true;
 
-            this.tasksService.addTask(this.taskForm.value as AddTask).subscribe({
-               next: (addResponse: TaskResponse) => {
+            this.tasksService.updateTask(this.data.task.id!, this.taskForm.value).subscribe({
+               next: (updateResponse: TaskResponse) => {
                   this.loading = false;
-                  if (!addResponse.done) {
+                  if (!updateResponse.done) {
                      this.snackBar
                         .open("❌ Hubo un error al procesar", "Cerrar", { duration: 3000 });
                      return;
@@ -117,7 +119,7 @@ export class AddTaskDialogComponent {
                error: (error) => {
                   this.snackBar
                      .open(error?.error?.message
-                        || "Error al intentar crear la tarea", "Cerrar", { duration: 3000 });
+                        || "Error al intentar modificar la tarea", "Cerrar", { duration: 3000 });
                   this.loading = false;
                }
             });
