@@ -3,22 +3,22 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { globalConst } from "../../global";
+import { environment } from "../../../environments/environment";
 import { UserCredentials, UserResponse } from "../models/user-credentials.model";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
-   private tokenKey = globalConst.tokenKey;
-   private tokenExpiryKey = globalConst.tokenExpiryKey;
+   private tokenKey = environment.tokenKey;
+   private tokenExpiryKey = environment.tokenExpiryKey;
 
    constructor(private http: HttpClient, private router: Router) { }
 
    login(credentials: UserCredentials): Observable<UserResponse> {
-      return this.http.post<UserResponse>(`${globalConst.userApiUrl}/login`, credentials);
+      return this.http.post<UserResponse>(`${environment.apiUrl}/users/login`, credentials);
    }
 
    createAccount(credentials: UserCredentials): Observable<UserResponse> {
-      return this.http.post<UserResponse>(`${globalConst.userApiUrl}/register`, credentials);
+      return this.http.post<UserResponse>(`${environment.apiUrl}/users/register`, credentials);
    }
 
    setToken(token: string) {

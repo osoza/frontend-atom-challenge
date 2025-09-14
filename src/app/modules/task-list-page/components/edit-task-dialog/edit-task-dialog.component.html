@@ -4,13 +4,13 @@
       <div class="mb-3">
          <label for="title" class="form-label">Título <span class="required">*</span></label>
          <input type="text" id="title" class="form-control" formControlName="title" name="title"
-            [ngClass]="{'is-invalid': taskForm.get('title')?.touched || errors.title }" placeholder="Ingresa el título"
+            [ngClass]="{'is-invalid': errors.title }" placeholder="Ingresa el título"
             required />
       </div>
       <div class="mb-3">
          <label for="description" class="form-label">Descripción <span class="required">*</span></label>
          <textarea id="description" class="form-control" formControlName="description" name="description"
-            [ngClass]="{'is-invalid': taskForm.get('description')?.touched || errors.description }"
+            [ngClass]="{'is-invalid': errors.description }"
             placeholder="Escribe la descripción" rows="3" required></textarea>
       </div>
       <div class="d-flex justify-content-end gap-2">

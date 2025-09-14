@@ -1,8 +1,18 @@
 @import "assets/styles/theme";
 
+:root {
+  --page-bg: #f1f1f1;
+  --header-padding-desktop: 3rem;
+  --card-max-width: 400px;
+  --card-padding: 0.5rem 2rem 2rem 2rem;
+  --gap: 16px;
+  --border-radius-card: 8px;
+}
+
 html,
 body {
    height: 100%;
+   margin: 0;
 }
 
 body {
