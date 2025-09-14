@@ -1,6 +1,6 @@
 export const environment = {
    production: true,
-   apiUrl: "https://mi-api-produccion.com",
+   apiUrl: "https://us-central1-atom-challenge-472104.cloudfunctions.net/api",
    tokenKey: "auth_token",
    tokenExpiryKey: "auth_token_expiry"
 };
