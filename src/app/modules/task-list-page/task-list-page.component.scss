@@ -1,52 +1,52 @@
 .toolbar {
-    display: flex;
-    align-items: center;
+   display: flex;
+   align-items: center;
 
-    .logo {
-        height: 40px;
-    }
+   .logo {
+      height: 40px;
+   }
 
-    .flex-spacer {
-        flex: 1 1 auto;
-    }
+   .flex-spacer {
+      flex: 1 1 auto;
+   }
 }
 
 .container {
-    padding: 1rem;
-    max-width: 100% !important;
+   padding: 1rem;
+   max-width: 100% !important;
 
-    .filters {
-        margin-bottom: 1rem;
+   .filters {
+      margin-bottom: 1rem;
 
-        .form-label {
-            font-weight: 500;
-        }
+      .form-label {
+         font-weight: 500;
+      }
 
-        .btn {
-            width: 120px;
-            height: 38px;
-        }
-    }
+      .btn {
+         width: 120px;
+         height: 38px;
+      }
+   }
 
-    .full-width {
-        width: 100%;
-        overflow-x: auto;
-    }
+   .full-width {
+      width: 100%;
+      overflow-x: auto;
+   }
 }
 
 /* Responsive ajustes */
 @media (max-width: 768px) {
-    .filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
+   .filters {
+      flex-direction: column;
+      align-items: stretch;
+   }
 
-    table {
-        font-size: 14px;
-    }
+   table {
+      font-size: 14px;
+   }
 
-    th,
-    td {
-        padding: 0.5rem;
-    }
+   th,
+   td {
+      padding: 0.5rem;
+   }
 }
