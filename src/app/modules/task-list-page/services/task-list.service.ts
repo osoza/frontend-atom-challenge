@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { globalConst } from "../../../global";
+import { environment } from "../../../../environments/environment";
 import {
    AddTask,
    Task,
@@ -28,18 +28,18 @@ export class TasksService {
             params = params.set("completed", String(filters.completed));
          }
       }
-      return this.http.get<TasksListResponse>(`${globalConst.taskApiUrl}/`, { params });
+      return this.http.get<TasksListResponse>(`${environment.apiUrl}/tasks/`, { params });
    }
 
    addTask(credentials: AddTask): Observable<TaskResponse> {
-      return this.http.post<TaskResponse>(`${globalConst.taskApiUrl}/`, credentials);
+      return this.http.post<TaskResponse>(`${environment.apiUrl}/tasks/`, credentials);
    }
 
    deleteTask(id: string): Observable<boolean> {
-      return this.http.delete<boolean>(`${globalConst.taskApiUrl}/${id}`);
+      return this.http.delete<boolean>(`${environment.apiUrl}/tasks/${id}`);
    }
 
    updateTask(id: string, data: Partial<Task>): Observable<TaskResponse> {
-      return this.http.put<TaskResponse>(`${globalConst.taskApiUrl}/${id}`, data);
+      return this.http.put<TaskResponse>(`${environment.apiUrl}/tasks/${id}`, data);
    }
 }
