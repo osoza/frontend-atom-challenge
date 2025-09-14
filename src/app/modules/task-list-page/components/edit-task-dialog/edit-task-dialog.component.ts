@@ -59,10 +59,14 @@ export class EditTaskDialogComponent {
       if (titleControl?.hasError("required")) {
          this.errors.title = true;
          this.snackBar.open("Debe completar todos los campos", "Cerrar", { duration: 3000 });
+      } else {
+         this.errors.title = false;
       }
 
       if (descriptionControl?.hasError("required")) {
          this.errors.description = true;
+      } else {
+         this.errors.description = false;
       }
 
       if (this.errors.title || this.errors.description) {
