@@ -17,7 +17,7 @@
             "build": {
                "builder": "@angular-devkit/build-angular:application",
                "options": {
-                  "outputPath": "dist/atom-challenge-fe-template",
+                  "outputPath": "dist/atom-fe-challenge",
                   "index": "src/index.html",
                   "browser": "src/main.ts",
                   "polyfills": [
